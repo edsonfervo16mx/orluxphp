@@ -16,28 +16,35 @@
 			return($connection);
 		}
 
-		/*
-		public function trigger($table,$data){
-			$query_col = array();
-			$query_v = array();
-			$data = $this->escape($data);
-			foreach ($data as $k => $v) {
-				$query_col[] = '`'.$k.'`';
-				if (is_array($v)&&isset($v['type'])&& $v["type"] == 'MYSQL_FUNCTION') {
-					$query_v[] = $v['value'];
-				}else{
-					$query_v[] = "'$v'";
-				}
-			}
-			$query = "INSERT INTO " . $table . "(" . implode(", ", $query_col) . ")VALUES(" . implode(", ", $query_v) . ")";
-			return  $this->query($query);
+		public function closeDB($conn){
+			mysqli_close($conn);
 		}
-		/**/
 
-		public function selectFromArray($table, $fields, $where){
+		public function triggerDB($key,$sql){
+			$conn = $this->connectDB($key);
+			$result = $conn->query($sql);
+			$this->closeDB($conn);
+			return($result);
+		}
+
+		public function getData($key, $table, $fields, $where){
 			$where_condition = $this->getWhereCondition($where);
-			$query="SELECT ".implode(",", $fields)." FROM $table $where_condition";
-			echo $query;
+			$sql="SELECT ".implode(",", $fields)." FROM $table $where_condition";
+			$res = $this->triggerDB($key,$sql);
+			$i=0;
+			$line = null;
+			while ($row = mysqli_fetch_assoc($res)) {
+				$line[$i] = array_map('utf8_encode', $row) ;
+				$i++;
+			}
+			$data = json_encode($line);
+			$data = json_decode($data);
+			if ($data) {
+				foreach ($data as $k) {}
+				return ($k);
+			}else{
+				return(null);
+			}
 		}
 
 		public function getWhereCondition($where){
@@ -62,11 +69,81 @@
 			return " WHERE ".$where_sql;
 		}
 
-		/*
-		public function getInsertId(){
-			return $this->mysqli->insert_id;
+		public function insertData($key,$table, $fields){
+			$colum = '';
+			$values = '';
+			$i = 0;
+			foreach ($fields as $k => $v) {
+				$i++;
+			}
+			foreach ($fields as $k => $v) {
+				if ($i > 1 ) {
+					$colum = $colum.$k.',';
+					$values = $values.'"'.$v.'",';
+				}else{
+					$colum = $colum.$k.'';
+					$values = $values.'"'.$v.'"';
+				}
+				$i--;
+			}
+			$sql = 'INSERT INTO '.$table.'('.$colum.') VALUES ('.$values.')';
+			$this->triggerDB($key,$sql);
+			$where_condition = $this->getWhereCondition($fields);
+			$sql = 'SELECT * FROM '.$table.$where_condition;
+			$res = $this->triggerDB($key,$sql);
+			/**/
+			$i=0;
+			$line = null;
+			while ($row = mysqli_fetch_assoc($res)) {
+				$line[$i] = array_map('utf8_encode', $row) ;
+				$i++;
+			}
+			$data = json_encode($line);
+			$data = json_decode($data);
+			if ($data) {
+				foreach ($data as $k) {}
+				return ($k);
+			}else{
+				return(null);
+			}
+			/**/
 		}
-		/**/
+		//PENDIENTE
+		public function updateData($key,$table,$fields,$where){
+			$string = '';
+			$i = 0;
+			foreach ($fields as $k => $v) {
+				$i++;
+			}
+			foreach ($fields as $k => $v) {
+				if ($i > 1 ) {
+					$string = $string.$k.'= upper("'.$v.'"), ';
+				}else{
+					$string = $string.$k.'= upper("'.$v.'")';
+				}
+				$i--;
+			}
+			$where_condition = $this->getWhereCondition($where);
+			$sql = 'UPDATE '.$table.' SET '.$string.''.$where_condition;
+			#echo $sql;
+			$this->triggerDB($key,$sql);
+			$sql = 'SELECT * FROM '.$table.$where_condition;
+			$res = $this->triggerDB($key,$sql);
+			/**/
+			$i=0;
+			$line = null;
+			while ($row = mysqli_fetch_assoc($res)) {
+				$line[$i] = array_map('utf8_encode', $row) ;
+				$i++;
+			}
+			$data = json_encode($line);
+			$data = json_decode($data);
+			if ($data) {
+				foreach ($data as $k) {}
+				return ($k);
+			}else{
+				return(null);
+			}
+		}
 	}
-
 ?>
