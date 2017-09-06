@@ -1,8 +1,8 @@
 <?php
-	require_once 'core/connection.php';
+	print '<meta http-equiv="REFRESH" content="0; url=view/empresa/lista.php">';
 
-	$conn = new Database;
-	$conn->connectDB($key);
+	#require_once 'core/connection.php';
+
 	//CONSULTA
 	/*
 	$fields = array('nombre','rfc');
@@ -22,6 +22,7 @@
 	echo @$data->nombre;
 	/**/
 	//MODIFICAR
+	/*
 	$fields = array(
 					'nombre' => utf8_decode('QERYSOFTTEST2'),
 					'rfc' => utf8_decode('QERY121089HTV')
@@ -34,4 +35,5 @@
 	$data = $conn->getData($key,'empresa',$fields,$where);
 	echo @$data->nombre;
 	echo @$data->rfc;
+	/**/
 ?>

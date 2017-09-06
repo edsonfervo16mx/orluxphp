@@ -1,13 +1,12 @@
 <?php
-	require_once 'config/key.php';
 
-	class Database{
+	class Connection{
 
 		public function test(){
 			echo 'Ok...';
 		}
 
-		public function connectDB($key){
+		public function open($key){
 			$host = $key['host'];
 			$user = $key['user'];
 			$pass = $key['pass'];
@@ -16,14 +15,14 @@
 			return($connection);
 		}
 
-		public function closeDB($conn){
+		public function close($conn){
 			mysqli_close($conn);
 		}
 
 		public function triggerDB($key,$sql){
-			$conn = $this->connectDB($key);
+			$conn = $this->open($key);
 			$result = $conn->query($sql);
-			$this->closeDB($conn);
+			$this->close($conn);
 			return($result);
 		}
 
@@ -40,8 +39,12 @@
 			$data = json_encode($line);
 			$data = json_decode($data);
 			if ($data) {
-				foreach ($data as $k) {}
-				return ($k);
+				if ($i > 1) {
+					return($data);
+				}else{
+					foreach ($data as $k) {}
+					return ($k);
+				}
 			}else{
 				return(null);
 			}
