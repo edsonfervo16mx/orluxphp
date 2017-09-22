@@ -1,18 +1,9 @@
 <?php 
 	require_once '../../core/Autoload.php';
+	$title = 'Ver';
+	$layout = new Layout;
+	$layout->renderHead($title);
+	require_once '../../layers/containers/empresa/menu.empresa.php';
+	require_once '../../layers/containers/empresa/ver.empresa.php';
+	$layout->renderFooter();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>Lista</title>
-	<link rel="stylesheet" href="">
-</head>
-<body>
-	<?php
-		require_once '../../layers/containers/empresa/menu.empresa.php';
-		require_once '../../layers/containers/empresa/ver.empresa.php';
-	?>
-</body>
-</html>
