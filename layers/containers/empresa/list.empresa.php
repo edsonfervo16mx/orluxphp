@@ -9,6 +9,7 @@
 				<th>NOMBRE</th>
 				<th>RFC</th>
 				<th>ESTATUS</th>
+				<th>Options</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -20,6 +21,10 @@
 							<td>'.$k->nombre.'</td>
 							<td>'.$k->rfc.'</td>
 							<td>'.$k->status.'</td>
+							<td>
+								<a href="modificar.php?id='.$k->nombre.'">Editar</a>
+								<a href="eliminar.php?id='.$k->nombre.'">Borrar</a>
+							</td>
 						</tr>
 					';
 				}

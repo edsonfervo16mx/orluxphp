@@ -82,10 +82,10 @@
 			foreach ($fields as $k => $v) {
 				if ($i > 1 ) {
 					$colum = $colum.$k.',';
-					$values = $values.'"'.$v.'",';
+					$values = $values.'upper("'.$v.'"),';
 				}else{
 					$colum = $colum.$k.'';
-					$values = $values.'"'.$v.'"';
+					$values = $values.'upper("'.$v.'")';
 				}
 				$i--;
 			}
